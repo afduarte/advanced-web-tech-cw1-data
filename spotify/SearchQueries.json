@@ -1,0 +1,233 @@
+[
+  {
+    "date" : "2018-08-12",
+    "platform" : "ANDROID",
+    "country" : "GB",
+    "terminationReason" : "INTERACTION",
+    "msDuration" : 3883,
+    "typedQuery" : "pink floyd",
+    "selectedQuery" : "pink floyd",
+    "userIntent" : "navigate-forward",
+    "viewUri" : "spotify:search:pink%20floyd"
+  },
+  {
+    "date" : "2018-08-13",
+    "platform" : "DESKTOP",
+    "country" : "GB",
+    "terminationReason" : "INTERACTION",
+    "msDuration" : 0,
+    "typedQuery" : null,
+    "selectedQuery" : "gorilla",
+    "userIntent" : "navigate-forward",
+    "viewUri" : "spotify:search:gorilla"
+  },
+  {
+    "date" : "2018-08-14",
+    "platform" : "DESKTOP",
+    "country" : "GB",
+    "terminationReason" : "INTERACTION",
+    "msDuration" : 0,
+    "typedQuery" : null,
+    "selectedQuery" : "pink",
+    "userIntent" : "navigate-forward",
+    "viewUri" : "spotify:search:pink"
+  },
+  {
+    "date" : "2018-08-14",
+    "platform" : "DESKTOP",
+    "country" : "GB",
+    "terminationReason" : "INTERACTION",
+    "msDuration" : 0,
+    "typedQuery" : null,
+    "selectedQuery" : "pink",
+    "userIntent" : "navigate-forward",
+    "viewUri" : "spotify:search:pink"
+  },
+  {
+    "date" : "2018-08-24",
+    "platform" : "ANDROID",
+    "country" : "GB",
+    "terminationReason" : "INTERACTION",
+    "msDuration" : 8831,
+    "typedQuery" : "gorillaz",
+    "selectedQuery" : "gorillaz",
+    "userIntent" : "navigate-forward",
+    "viewUri" : "spotify:search:gorillaz"
+  },
+  {
+    "date" : "2018-08-24",
+    "platform" : "ANDROID",
+    "country" : "GB",
+    "terminationReason" : "INTERACTION",
+    "msDuration" : 2586,
+    "typedQuery" : "prpdigy",
+    "selectedQuery" : "prpdigy",
+    "userIntent" : "navigate-forward",
+    "viewUri" : "spotify:search:prpdigy"
+  },
+  {
+    "date" : "2018-08-24",
+    "platform" : "ANDROID",
+    "country" : "GB",
+    "terminationReason" : "INTERACTION",
+    "msDuration" : 1926,
+    "typedQuery" : "pink flo",
+    "selectedQuery" : "pink f",
+    "userIntent" : "navigate-forward",
+    "viewUri" : "spotify:search:pink%20f"
+  },
+  {
+    "date" : "2018-08-28",
+    "platform" : "ANDROID",
+    "country" : "GB",
+    "terminationReason" : "INTERACTION",
+    "msDuration" : 3064,
+    "typedQuery" : "alab",
+    "selectedQuery" : "alab",
+    "userIntent" : "navigate-forward",
+    "viewUri" : "spotify:search:alab"
+  },
+  {
+    "date" : "2018-08-28",
+    "platform" : "ANDROID",
+    "country" : "GB",
+    "terminationReason" : "INTERACTION",
+    "msDuration" : 0,
+    "typedQuery" : null,
+    "selectedQuery" : null,
+    "userIntent" : "navigate-forward",
+    "viewUri" : "spotify:search"
+  },
+  {
+    "date" : "2018-08-29",
+    "platform" : "ANDROID",
+    "country" : "GB",
+    "terminationReason" : "INTERACTION",
+    "msDuration" : 1920,
+    "typedQuery" : "blur",
+    "selectedQuery" : "blur",
+    "userIntent" : "navigate-forward",
+    "viewUri" : "spotify:search:blur"
+  },
+  {
+    "date" : "2018-08-29",
+    "platform" : "DESKTOP",
+    "country" : "GB",
+    "terminationReason" : "INTERACTION",
+    "msDuration" : 0,
+    "typedQuery" : null,
+    "selectedQuery" : "red hot chi",
+    "userIntent" : "navigate-forward",
+    "viewUri" : "spotify:search:red hot chi"
+  },
+  {
+    "date" : "2018-08-30",
+    "platform" : "ANDROID",
+    "country" : "GB",
+    "terminationReason" : "INTERACTION",
+    "msDuration" : 3852,
+    "typedQuery" : "guilty femi",
+    "selectedQuery" : "guilty femi",
+    "userIntent" : "navigate-forward",
+    "viewUri" : "spotify:search:guilty%20femi"
+  },
+  {
+    "date" : "2018-08-30",
+    "platform" : "DESKTOP",
+    "country" : "GB",
+    "terminationReason" : "INTERACTION",
+    "msDuration" : 0,
+    "typedQuery" : null,
+    "selectedQuery" : "electropop",
+    "userIntent" : "navigate-forward",
+    "viewUri" : "spotify:search:electropop"
+  },
+  {
+    "date" : "2018-09-01",
+    "platform" : "ANDROID",
+    "country" : "GB",
+    "terminationReason" : "INTERACTION",
+    "msDuration" : 11028,
+    "typedQuery" : "plastic b",
+    "selectedQuery" : "plastic b",
+    "userIntent" : "navigate-forward",
+    "viewUri" : "spotify:search:plastic%20b"
+  },
+  {
+    "date" : "2018-09-03",
+    "platform" : "ANDROID",
+    "country" : "GB",
+    "terminationReason" : "INTERACTION",
+    "msDuration" : 0,
+    "typedQuery" : null,
+    "selectedQuery" : null,
+    "userIntent" : "navigate-forward",
+    "viewUri" : "spotify:search"
+  },
+  {
+    "date" : "2018-09-05",
+    "platform" : "DESKTOP",
+    "country" : "GB",
+    "terminationReason" : "INTERACTION",
+    "msDuration" : 0,
+    "typedQuery" : null,
+    "selectedQuery" : "sleep",
+    "userIntent" : "navigate-forward",
+    "viewUri" : "spotify:search:sleep"
+  },
+  {
+    "date" : "2018-09-05",
+    "platform" : "DESKTOP",
+    "country" : "GB",
+    "terminationReason" : "INTERACTION",
+    "msDuration" : 0,
+    "typedQuery" : null,
+    "selectedQuery" : "plastic",
+    "userIntent" : "navigate-forward",
+    "viewUri" : "spotify:search:plastic"
+  },
+  {
+    "date" : "2018-09-07",
+    "platform" : "DESKTOP",
+    "country" : "GB",
+    "terminationReason" : "INTERACTION",
+    "msDuration" : 0,
+    "typedQuery" : null,
+    "selectedQuery" : "ozz",
+    "userIntent" : "navigate-forward",
+    "viewUri" : "spotify:search:ozz"
+  },
+  {
+    "date" : "2018-09-10",
+    "platform" : "ANDROID",
+    "country" : "GB",
+    "terminationReason" : "INTERACTION",
+    "msDuration" : 1672,
+    "typedQuery" : "speedy",
+    "selectedQuery" : "speedy",
+    "userIntent" : "navigate-forward",
+    "viewUri" : "spotify:search:speedy"
+  },
+  {
+    "date" : "2018-09-10",
+    "platform" : "ANDROID",
+    "country" : "GB",
+    "terminationReason" : "INTERACTION",
+    "msDuration" : 0,
+    "typedQuery" : null,
+    "selectedQuery" : null,
+    "userIntent" : "navigate-forward",
+    "viewUri" : "spotify:search"
+  },
+  {
+    "date" : "2018-09-10",
+    "platform" : "ANDROID",
+    "country" : "GB",
+    "terminationReason" : "INTERACTION",
+    "msDuration" : 0,
+    "typedQuery" : null,
+    "selectedQuery" : null,
+    "userIntent" : "navigate-forward",
+    "viewUri" : "spotify:search"
+  }
+]

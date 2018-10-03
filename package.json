@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "fast-csv": "^2.4.1",
+    "musicbrainz": "^0.2.6"
+  }
+}
