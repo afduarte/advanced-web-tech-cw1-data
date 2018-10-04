@@ -145,13 +145,56 @@ async function getMusicBrainzSongs() {
 	})
 }
 
+async function getAcousticBrainz() {
+	let done = 0;
+	const promises = [];
+	let row = 0;
+	fcsv.fromPath('./csv/tracks.csv', {
+		headers: ["release", "medium", "track", "name", "position", "length"]
+	}).on('data', async ({
+		track
+	}) => {
+		const elem = (async (currRow) => {
+			return new Promise(async (resolve, reject) => {
+				try {
+					await new Promise((r) => {
+						setTimeout(r(), (row % 10) * 100)
+					})
+					const {
+						data
+					} = await axios.get(`https://acousticbrainz.org/api/v1/${track}/low-level`)
+					const bpm = (data && data.rhythm && data.rhythm.bpm) || "0"
+					const loud = (data && data.lowlevel && data.lowlevel.average_loudness) || "0"
+					const chordchange = (data && data.tonal && data.tonal.chords_changes_rate) || "0"
+					const chordkey = (data && data.tonal && data.tonal.chords_key) || ""
+					const chordscale = (data && data.tonal && data.tonal.chords_scale) || ""
+					const keykey = (data && data.tonal && data.tonal.key_key) || ""
+					const keyscale = (data && data.tonal && data.tonal.key_scale) || ""
+					const keystr = (data && data.tonal && data.tonal.key_strength) || "0"
+					console.log(`"${track}","${bpm}","${loud}","${chordkey} ${chordscale}","${chordchange}","${keykey} ${keyscale}","${keystr}"`)
+					done += 1
+					console.error(`${done}/23519`)
+					resolve(true)
+				} catch (e) {
+					console.error(`failed (${row}): ${track} => ${e.message}`)
+				}
+			})
+		})(row)
+		promises.push(elem)
+		row++
+	}).on('end', () => {
+		return Promise.all(promises)
+	})
+}
+
 
 (async () => {
 	// await collectSpotifyPlaylist()
 	// await collectSpotifyLibrary()
 	// await matchToMusicBrainz()
 	// await getMusicBrainzAlbums()
-	await getMusicBrainzSongs()
+	// await getMusicBrainzSongs()
+	await getAcousticBrainz()
 })()
 
 function searchArtists(query, filter, force) {
