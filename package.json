@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "axios": "^0.18.0",
     "fast-csv": "^2.4.1",
     "musicbrainz": "^0.2.6"
   }

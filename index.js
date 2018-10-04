@@ -1,5 +1,6 @@
 const mb = require('musicbrainz')
 const fcsv = require('fast-csv')
+const axios = require('axios')
 const {
 	playlists
 } = require('./spotify/Playlist-mod')
@@ -66,19 +67,81 @@ async function matchToMusicBrainz() {
 
 async function getMusicBrainzAlbums() {
 	let done = 0;
-	fcsv.fromPath('./musicbrainzID.csv', {
+	fcsv.fromPath('./csv/musicbrainzID.csv', {
 		headers: ['id', 'name', 'country', 'lifespan']
 	}).on('data', async ({
 		id
 	}) => {
 		const artist = await lookupArtist(id, ['release-groups'])
 		const albums = artist.releaseGroups.filter(r => r.type == 'Album')
-		albums.forEach(a =>{
-			// album, album name, first release date, artist
-			console.log(`"${a.id}","${a.title}","${a.firstReleaseDate || ''}","${id}"`)
+		const promises = albums.map(async (a) => {
+			let mainrelease, front, back, stage;
+			try {
+				stage = 'relgroup'
+				const {
+					data
+				} = await axios.get(`https://coverartarchive.org/release-group/${a.id}/`);
+				stage = 'coverart-start';
+				mainrelease = (data.release || '').split('/').pop();
+				stage = 'coverart-rel';
+				front = data.images.find(i => i.front).image
+				stage = 'coverart-front';
+				back = data.images.find(i => i.back).image
+				stage = 'coverart-end';
+			} catch (e) {
+				console.error(`failed: ${artist.name} - ${a.title} (${stage}) => ${a.id}`)
+			} finally {
+				switch (stage) {
+					case 'coverart-end':
+						// artist id, relgroup id, relgroup name, first release date, main release, front cover, back cover
+						console.log(`"${id}","${a.id}","${a.title}","${a.firstReleaseDate || ''}","${mainrelease}","${front || ''}","${back || ''}"`)
+						break
+					case 'coverart-front':
+						// artist id, relgroup id, relgroup name, first release date, main release, front cover
+						console.log(`"${id}","${a.id}","${a.title}","${a.firstReleaseDate || ''}","${mainrelease}","${front || ''}",""`)
+						break
+					case 'coverart-rel':
+						// artist id, relgroup id, relgroup name, first release date, main release
+						console.log(`"${id}","${a.id}","${a.title}","${a.firstReleaseDate || ''}","${mainrelease}","",""`)
+						break
+					default:
+						// artist id, relgroup id, relgroup name, first release date
+						console.log(`"${id}","${a.id}","${a.title}","${a.firstReleaseDate || ''}","","",""`)
+				}
+				done += 1
+				console.error(`${done}/192`)
+				return Promise.resolve()
+			}
 		})
-		done += 1
-		console.error(`${done}/192`)
+		return Promise.all(promises)
+	})
+}
+
+async function getMusicBrainzSongs() {
+	return new Promise((resolve, reject) => {
+		let done = 0;
+		fcsv.fromPath('./csv/albums-full.csv', {
+			headers: ["artist", "relgroup", "relgroup-name", "reldate", "mainrel", "frontcover", "backcover"]
+		}).on('data', async ({
+			mainrel
+		}) => {
+			const release = await lookupRelease(mainrel, ['recordings'])
+			release.mediums.forEach(m => {
+				const format = m.format && m.format['#'] ? m.format['#'] : m.position;
+				m.tracks.forEach(t => {
+					try {
+						// release id, medium, track id, track name, position, length
+						console.log(`"${mainrel}","${format.replace(/"/g,"'")}","${t.recording.id}","${t.recording.title}","${t.position}","${t.length}"`)
+					} catch (e) {
+						console.error(`failed: ${t.recording.id} => ${e.message}`)
+					}
+				});
+			});
+			done += 1;
+			console.error(`${done}/1858`)
+		}).on('end', () => {
+			resolve(true)
+		})
 	})
 }
 
@@ -87,7 +150,8 @@ async function getMusicBrainzAlbums() {
 	// await collectSpotifyPlaylist()
 	// await collectSpotifyLibrary()
 	// await matchToMusicBrainz()
-	await getMusicBrainzAlbums()
+	// await getMusicBrainzAlbums()
+	await getMusicBrainzSongs()
 })()
 
 function searchArtists(query, filter, force) {
@@ -111,6 +175,15 @@ function load(ent, query, force) {
 function lookupArtist(id, links) {
 	return new Promise((resolve, reject) => {
 		mb.lookupArtist(id, links, (err, data) => {
+			if (err) return reject(err)
+			return resolve(data)
+		})
+	})
+}
+
+function lookupRelease(id, links) {
+	return new Promise((resolve, reject) => {
+		mb.lookupRelease(id, links, (err, data) => {
 			if (err) return reject(err)
 			return resolve(data)
 		})
