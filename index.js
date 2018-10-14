@@ -9,6 +9,8 @@ const bands = require('./bands')
 const {
 	promisify
 } = require('util')
+const fs = require('fs');
+const fileExists = promisify(fs.exists)
 
 async function collectSpotifyPlaylist() {
 	const artistCount = playlists.reduce((artists, p) => {
@@ -160,6 +162,9 @@ async function getAcousticBrainz() {
 					await new Promise((r) => {
 						setTimeout(r(), (row % 10) * 100)
 					})
+					await new Promise((r) => {
+						setTimeout(r(), 50)
+					})
 					const {
 						data
 					} = await axios.get(`https://acousticbrainz.org/api/v1/${track}/low-level`)
@@ -187,6 +192,59 @@ async function getAcousticBrainz() {
 	})
 }
 
+async function downloadAcousticBrainz() {
+	let done = 0;
+	const promises = [];
+	let row = 0;
+	fcsv.fromPath('./csv/fullbrainz.csv', {
+		headers: ["release", "medium", "track", "name", "position", "length"]
+	}).on('data', async ({
+		track
+	}) => {
+		const elem = (async (currRow) => {
+			return new Promise(async (resolve, reject) => {
+				try {
+					const exists = await fileExists(`./acoustics/${track}.json`)
+
+					if (!exists) {
+						await new Promise((r) => {
+							setTimeout(r(), (currRow % 10) * 100)
+						})
+						const {
+							data
+						} = await axios.get(`https://acousticbrainz.org/api/v1/${track}/low-level`)
+						fs.writeFile(`./acoustics/${track}.json`, JSON.stringify(data),(err)=>{
+							if(!err){
+								done+= 1
+								console.log(`${done}/19933`)
+								resolve(true);
+							}else{
+								throw err
+								resolve(true)
+							}
+						});
+					}else{
+						done+=1
+						console.log(`skipping ${track}, done: ${done}/19933`)
+					}
+				} catch (e) {
+					console.error(`failed (${currRow}): ${track} => ${e.message}`)
+				}
+			})
+		})(row)
+		promises.push(elem)
+		row++
+	}).on('end', async () => {
+		promises.push(new Promise((r) => {
+			setTimeout(() =>{
+				console.log("waiting 10 secs for any unresolved promise to resolve")
+				r();
+			},  60000)
+		}))
+		return Promise.all(promises)
+	})
+}
+
 
 (async () => {
 	// await collectSpotifyPlaylist()
@@ -194,7 +252,7 @@ async function getAcousticBrainz() {
 	// await matchToMusicBrainz()
 	// await getMusicBrainzAlbums()
 	// await getMusicBrainzSongs()
-	await getAcousticBrainz()
+	await downloadAcousticBrainz()
 })()
 
 function searchArtists(query, filter, force) {
