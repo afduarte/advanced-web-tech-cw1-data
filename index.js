@@ -11,6 +11,9 @@ const {
 } = require('util')
 const fs = require('fs');
 const fileExists = promisify(fs.exists)
+const readdir = promisify(fs.readdir)
+
+const readFile = promisify(fs.readFile)
 
 async function collectSpotifyPlaylist() {
 	const artistCount = playlists.reduce((artists, p) => {
@@ -213,18 +216,18 @@ async function downloadAcousticBrainz() {
 						const {
 							data
 						} = await axios.get(`https://acousticbrainz.org/api/v1/${track}/low-level`)
-						fs.writeFile(`./acoustics/${track}.json`, JSON.stringify(data),(err)=>{
-							if(!err){
-								done+= 1
+						fs.writeFile(`./acoustics/${track}.json`, JSON.stringify(data), (err) => {
+							if (!err) {
+								done += 1
 								console.log(`${done}/19933`)
 								resolve(true);
-							}else{
+							} else {
 								throw err
 								resolve(true)
 							}
 						});
-					}else{
-						done+=1
+					} else {
+						done += 1
 						console.log(`skipping ${track}, done: ${done}/19933`)
 					}
 				} catch (e) {
@@ -236,12 +239,39 @@ async function downloadAcousticBrainz() {
 		row++
 	}).on('end', async () => {
 		promises.push(new Promise((r) => {
-			setTimeout(() =>{
+			setTimeout(() => {
 				console.log("waiting 10 secs for any unresolved promise to resolve")
 				r();
-			},  60000)
+			}, 60000)
 		}))
 		return Promise.all(promises)
+	})
+}
+
+async function parseAcousticBrainz() {
+	const files = await readdir("./acoustics");
+	// print the headers
+	console.log('"id","bpm","loudness","chord_key","chord_change_rate","song_key","key_strength","danceability","dynamic_complexity"')
+	files.forEach(async name => {
+		try {
+			const file = await readFile('./acoustics/' + name)
+			// Remove the .json bit from the file name to get the ID back
+			const id = name.substring(0, name.length - 5)
+			const data = JSON.parse(file);
+			const bpm = (data && data.rhythm && data.rhythm.bpm) || "0"
+			const danceability = (data && data.rhythm && data.rhythm.danceability) || "0"
+			const loud = (data && data.lowlevel && data.lowlevel.average_loudness) || "0"
+			const dc = (data && data.lowlevel && data.lowlevel.dynamic_complexity) || "0"
+			const chordchange = (data && data.tonal && data.tonal.chords_changes_rate) || "0"
+			const chordkey = (data && data.tonal && data.tonal.chords_key) || ""
+			const chordscale = (data && data.tonal && data.tonal.chords_scale) || ""
+			const keykey = (data && data.tonal && data.tonal.key_key) || ""
+			const keyscale = (data && data.tonal && data.tonal.key_scale) || ""
+			const keystr = (data && data.tonal && data.tonal.key_strength) || "0"
+			console.log(`"${id}","${bpm}","${loud}","${chordkey} ${chordscale}","${chordchange}","${keykey} ${keyscale}","${keystr}","${danceability}","${dc}"`)
+		} catch (e) {
+			console.error(`Failed: ${name} => ${e.message}`)
+		}
 	})
 }
 
@@ -252,7 +282,8 @@ async function downloadAcousticBrainz() {
 	// await matchToMusicBrainz()
 	// await getMusicBrainzAlbums()
 	// await getMusicBrainzSongs()
-	await downloadAcousticBrainz()
+	// await downloadAcousticBrainz()
+	await parseAcousticBrainz()
 })()
 
 function searchArtists(query, filter, force) {
